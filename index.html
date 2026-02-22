@@ -1,1 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="SmartPlay helps under-resourced student-athletes get coaching, recruitment exposure, and injury-risk insights through phone-first sports analytics." />
+  <title>SmartPlay — Equal access to elite athletic development</title>
+  <style>
+    :root{
+      --bg:#070A12;
+      --bg2:#0B1022;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.09);
+      --stroke:rgba(255,255,255,.12);
+      --text:#EAF0FF;
+      --muted:rgba(234,240,255,.72);
+      --muted2:rgba(234,240,255,.55);
+      --brand:#7C5CFF;
+      --brand2:#2BE7FF;
+      --good:#39d98a;
+      --warn:#ffcc66;
+      --bad:#ff6b6b;
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --shadow2: 0 12px 30px rgba(0,0,0,.35);
+      --radius: 22px;
+      --radius2: 16px;
+      --max: 1140px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1000px 700px at 15% 10%, rgba(124,92,255,.28), transparent 60%),
+        radial-gradient(900px 600px at 85% 20%, rgba(43,231,255,.18), transparent 55%),
+        radial-gradient(800px 600px at 50% 95%, rgba(124,92,255,.20), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+    }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:var(--max); margin:0 auto; padding:0 22px}
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, rgba(7,10,18,.86), rgba(7,10,18,.60));
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:14px}
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:800; letter-spacing:.2px;
+    }
+    .logo{
+      width:36px; height:36px; border-radius:12px;
+      background: radial-gradient(circle at 30% 30%, rgba(43,231,255,.9), rgba(124,92,255,.95) 60%, rgba(124,92,255,.35));
+      box-shadow: 0 10px 22px rgba(124,92,255,.25);
+      position:relative;
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:9px 10px 10px 9px;
+      border-radius:10px;
+      border:1px dashed rgba(255,255,255,.35);
+      transform: rotate(-8deg);
+      opacity:.75;
+    }
+    .nav-links{display:flex; gap:16px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+    .nav-links a{
+      font-size:14px; color:var(--muted);
+      padding:8px 10px; border-radius:12px;
+      transition:.15s ease;
+    }
+    .nav-links a:hover{background:rgba(255,255,255,.06); color:var(--text)}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:11px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      box-shadow: 0 10px 24px rgba(0,0,0,.25);
+      cursor:pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      user-select:none;
+      font-weight:700;
+      font-size:14px;
+      white-space:nowrap;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18)}
+    .btn.primary{
+      border-color: rgba(124,92,255,.35);
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(43,231,255,.70));
+      box-shadow: 0 16px 30px rgba(124,92,255,.25);
+      color:#071019;
+    }
+    .btn.primary:hover{transform: translateY(-1px) scale(1.01)}
+    .pill{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:8px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color:var(--muted);
+      font-weight:650;
+      font-size:13px;
+    }
+    .dot{width:8px; height:8px; border-radius:999px; background:var(--good); box-shadow: 0 0 0 4px rgba(57,217,138,.15)}
+    header.hero{
+      padding:42px 0 10px;
+      position:relative;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:26px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns:1fr; }
+      .nav-links{display:none;}
+      .menu-btn{display:inline-flex}
+    }
+    .menu-btn{display:none}
+    .hero-left{
+      padding:18px 0;
+    }
+    h1{
+      margin:16px 0 10px;
+      font-size: clamp(34px, 4.6vw, 56px);
+      line-height:1.02;
+      letter-spacing:-.7px;
+    }
+    .gradient-text{
+      background: linear-gradient(135deg, rgba(124,92,255,1), rgba(43,231,255,1));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .sub{
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.55;
+      max-width: 58ch;
+      margin: 14px 0 18px;
+    }
+    .cta-row{
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+      margin: 18px 0 16px;
+    }
+    .mini{
+      color:var(--muted2);
+      font-size:13px;
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .mini span{display:inline-flex; gap:8px; align-items:center}
+    .check{
+      width:18px; height:18px; border-radius:8px;
+      display:inline-grid; place-items:center;
+      background: rgba(57,217,138,.14);
+      border:1px solid rgba(57,217,138,.30);
+      color:var(--good);
+      font-weight:900;
+      font-size:12px;
+    }
+    .hero-right{
+      position:relative;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      min-height: 420px;
+    }
+    .hero-right:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(420px 280px at 30% 20%, rgba(43,231,255,.25), transparent 60%),
+        radial-gradient(460px 320px at 75% 35%, rgba(124,92,255,.32), transparent 60%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .phone{
+      position:absolute;
+      left:50%;
+      top:52%;
+      transform: translate(-50%,-50%);
+      width:min(330px, 82%);
+      aspect-ratio: 9/18;
+      border-radius: 32px;
+      background: rgba(7,10,18,.65);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+      overflow:hidden;
+    }
+    .phone .topbar{
+      height:44px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 10px 14px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:12px;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      background: rgba(124,92,255,.16);
+      border: 1px solid rgba(124,92,255,.28);
+      color: rgba(234,240,255,.86);
+      font-weight:750;
+      font-size:12px;
+    }
+    .screen{
+      padding: 14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .card{
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .row{display:flex; align-items:center; justify-content:space-between; gap:10px}
+    .kpi{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .kpi b{font-size:14px}
+    .kpi small{color:var(--muted2); font-size:12px}
+    .chip{
+      font-family:var(--mono);
+      font-size:11px;
+      color: rgba(234,240,255,.78);
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 12px;
+      padding: 6px 9px;
+      white-space:nowrap;
+    }
+    .bar{
+      height:10px; border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      margin-top:10px;
+    }
+    .bar > i{
+      display:block; height:100%;
+      width:60%;
+      background: linear-gradient(90deg, rgba(124,92,255,1), rgba(43,231,255,1));
+      border-radius:999px;
+    }
+    .tagrow{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .tag{
+      font-size:11px; color: rgba(234,240,255,.72);
+      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.10);
+      padding:6px 8px;
+      border-radius: 999px;
+    }
 
+    section{padding: 54px 0}
+    .section-head{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+    h2{
+      margin:0;
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing:-.4px;
+      line-height:1.15;
+    }
+    .lead{
+      color:var(--muted);
+      max-width: 70ch;
+      line-height:1.6;
+      margin: 8px 0 0;
+      font-size:15.5px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+    }
+    .span-4{grid-column: span 4}
+    .span-5{grid-column: span 5}
+    .span-6{grid-column: span 6}
+    .span-7{grid-column: span 7}
+    .span-8{grid-column: span 8}
+    .span-12{grid-column: span 12}
+    @media (max-width: 980px){
+      .span-4,.span-5,.span-6,.span-7,.span-8{grid-column: span 12}
+      section{padding: 44px 0}
+    }
+    .panel{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      box-shadow: var(--shadow2);
+      padding: 18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .panel:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(420px 240px at 20% 0%, rgba(124,92,255,.18), transparent 65%),
+        radial-gradient(380px 240px at 100% 20%, rgba(43,231,255,.12), transparent 60%);
+      opacity:.8;
+      pointer-events:none;
+    }
+    .panel > *{position:relative}
+    .icon{
+      width:40px; height:40px; border-radius:14px;
+      display:grid; place-items:center;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      margin-bottom:10px;
+      font-weight:900;
+    }
+    .muted{color:var(--muted)}
+    .muted2{color:var(--muted2)}
+    .bullets{margin:10px 0 0; padding-left:18px; color:var(--muted); line-height:1.55}
+    .bullets li{margin:6px 0}
+    .split{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 980px){ .split{grid-template-columns:1fr} }
+
+    .demo{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){ .demo{grid-template-columns:1fr} }
+    .control{
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .control label{font-size:13px; color:var(--muted)}
+    .control input[type="range"]{width:100%}
+    .statline{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      font-family:var(--mono);
+      font-size:12px;
+      color: rgba(234,240,255,.78);
+    }
+    .meter{
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      position:relative;
+    }
+    .meter > i{
+      display:block; height:100%;
+      width:40%;
+      border-radius:999px;
+      background: linear-gradient(90deg, rgba(43,231,255,1), rgba(124,92,255,1));
+      transition: width .18s ease;
+    }
+    .meter.bad > i{background: linear-gradient(90deg, rgba(255,107,107,1), rgba(255,204,102,1));}
+    .hint{
+      font-size:12.5px;
+      color:var(--muted2);
+      line-height:1.5;
+    }
+
+    .pricing{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+      align-items:stretch;
+    }
+    @media (max-width: 980px){ .pricing{grid-template-columns:1fr} }
+    .price{
+      padding:18px;
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow2);
+      position:relative;
+      overflow:hidden;
+    }
+    .price.featured{
+      border-color: rgba(124,92,255,.35);
+      background: linear-gradient(180deg, rgba(124,92,255,.18), rgba(255,255,255,.03));
+    }
+    .price h3{margin:4px 0 8px}
+    .price .amt{
+      font-size:34px; font-weight:900; letter-spacing:-.6px;
+      display:flex; align-items:flex-end; gap:8px;
+    }
+    .price .amt small{font-size:13px; color:var(--muted); font-weight:700; margin-bottom:6px}
+    .list{
+      margin:12px 0 0; padding:0; list-style:none;
+      display:flex; flex-direction:column; gap:10px;
+      color:var(--muted);
+      line-height:1.45;
+    }
+    .list li{display:flex; gap:10px}
+    .list .tick{
+      width:20px; height:20px; border-radius:10px;
+      display:grid; place-items:center;
+      background: rgba(57,217,138,.14);
+      border:1px solid rgba(57,217,138,.30);
+      color:var(--good);
+      font-weight:900;
+      flex:0 0 auto;
+      margin-top:1px;
+      font-size:12px;
+    }
+
+    .faq{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 980px){ .faq{grid-template-columns:1fr} }
+    details{
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      padding: 14px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:800;
+      color: rgba(234,240,255,.92);
+      list-style:none;
+    }
+    summary::-webkit-details-marker{display:none}
+    details p{margin:10px 0 0; color:var(--muted); line-height:1.55}
+
+    .footer{
+      padding: 40px 0;
+      border-top:1px solid rgba(255,255,255,.08);
+      color:var(--muted2);
+    }
+    .footer-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .footer-grid{grid-template-columns:1fr} }
+    .small{font-size:13px; line-height:1.6; color:var(--muted2)}
+    .kbd{
+      font-family:var(--mono);
+      font-size:12px;
+      padding: 2px 7px;
+      border-radius: 8px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: rgba(234,240,255,.78);
+    }
+
+    /* Modal */
+    .overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.58);
+      display:none;
+      align-items:center; justify-content:center;
+      padding: 18px;
+      z-index: 80;
+      backdrop-filter: blur(8px);
+    }
+    .modal{
+      width:min(760px, 100%);
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(15,18,35,.98), rgba(7,10,18,.92));
+      box-shadow: 0 28px 90px rgba(0,0,0,.6);
+      overflow:hidden;
+    }
+    .modal-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 14px 16px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .modal-head b{font-size:14px}
+    .close{
+      width:36px; height:36px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      cursor:pointer;
+      font-weight:900;
+    }
+    .modal-body{padding: 16px}
+    .form{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 760px){ .form{grid-template-columns:1fr} }
+    .field{
+      display:flex; flex-direction:column; gap:6px;
+    }
+    .field label{font-size:12px; color:var(--muted)}
+    .field input, .field select, .field textarea{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    .field textarea{min-height: 92px; resize: vertical; grid-column: span 2}
+    @media (max-width: 760px){ .field textarea{grid-column: span 1} }
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: rgba(10,14,28,.92);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding: 12px 14px;
+      color: rgba(234,240,255,.92);
+      box-shadow: 0 18px 60px rgba(0,0,0,.5);
+      display:none;
+      z-index:90;
+      width: min(640px, calc(100% - 26px));
+    }
+    .toast small{color:var(--muted); display:block; margin-top:2px}
+    .fade-in{
+      opacity:0; transform: translateY(10px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .fade-in.show{opacity:1; transform: translateY(0)}
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div style="font-size:14px; font-weight:900;">SmartPlay</div>
+          <div style="font-size:12px; color:var(--muted2); margin-top:1px;">Phone-first coaching + recruitment + safety</div>
+        </div>
+      </div>
+
+      <div class="nav-links" role="navigation" aria-label="Primary">
+        <a href="#problem">Problem</a>
+        <a href="#solution">Solution</a>
+        <a href="#demo">Demo</a>
+        <a href="#buyers">Who buys?</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="btn menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+        <button class="btn" id="pilotBtn">Request a school pilot</button>
+        <button class="btn primary" id="waitlistBtn">Join waitlist</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div class="hero-left fade-in">
+        <div class="pill"><span class="dot"></span> Built for under-resourced student-athletes • Designed for mass adoption</div>
+        <h1>
+          Equal access to <span class="gradient-text">elite athletic development</span> — from a phone.
+        </h1>
+        <p class="sub">
+          SmartPlay turns any smartphone into a coaching + recruitment toolkit: skill tracking, highlight building,
+          and injury-risk insights—without expensive private training or elite exposure networks.
+        </p>
+        <div class="cta-row">
+          <button class="btn primary" id="heroWaitlist">Get early access</button>
+          <button class="btn" id="heroDemo">See 60-second demo</button>
+          <a class="btn" href="#buyers">How schools use it →</a>
+        </div>
+        <div class="mini">
+          <span><span class="check">✓</span> Works with basic phones</span>
+          <span><span class="check">✓</span> Team + individual modes</span>
+          <span><span class="check">✓</span> Privacy-first sharing</span>
+          <span><span class="check">✓</span> Coach hours saved</span>
+        </div>
+      </div>
+
+      <div class="hero-right fade-in" style="transition-delay:.08s">
+        <div class="phone" aria-label="SmartPlay app preview (mock)">
+          <div class="topbar">
+            <span class="badge">SmartPlay • Match Day</span>
+            <span style="opacity:.8">9:41</span>
+          </div>
+          <div class="screen">
+            <div class="card">
+              <div class="row">
+                <div class="kpi">
+                  <b>Training Score</b>
+                  <small>Today vs last week</small>
+                </div>
+                <div class="chip" id="chipScore">+12%</div>
+              </div>
+              <div class="bar"><i id="barScore"></i></div>
+              <div class="tagrow">
+                <span class="tag">Footwork</span>
+                <span class="tag">Reaction</span>
+                <span class="tag">Sprint</span>
+                <span class="tag">Consistency</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="row">
+                <div class="kpi">
+                  <b>Recruitment Pack</b>
+                  <small>Highlights + verified stats</small>
+                </div>
+                <div class="chip">Ready</div>
+              </div>
+              <div style="margin-top:10px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <div class="card" style="padding:10px; border-radius:14px;">
+                  <div style="font-size:12px; color:var(--muted2)">Top clip</div>
+                  <div style="font-weight:900; margin-top:4px;">12s • Finish</div>
+                </div>
+                <div class="card" style="padding:10px; border-radius:14px;">
+                  <div style="font-size:12px; color:var(--muted2)">Share</div>
+                  <div style="font-weight:900; margin-top:4px;">Coach / Scout</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="row">
+                <div class="kpi">
+                  <b>Safety Check</b>
+                  <small>Injury-risk indicator</small>
+                </div>
+                <div class="chip" id="chipRisk">Low</div>
+              </div>
+              <div class="bar"><i id="barRisk" style="width:28%"></i></div>
+              <div style="margin-top:10px; color:var(--muted2); font-size:12px; line-height:1.45;">
+                Balanced load this week. Recommended: 1 recovery day + mobility.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="padding-top:22px;">
+      <div class="grid">
+        <div class="span-12 panel fade-in" style="transition-delay:.12s">
+          <div class="row" style="flex-wrap:wrap">
+            <div>
+              <b style="font-size:14px;">What judges want to see:</b>
+              <div class="small" style="margin-top:6px;">
+                A clear unsolved problem, a differentiated “new market space,” mass adoption potential, and a go-to-market that schools can actually buy.
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <span class="pill"><span class="dot" style="background:var(--brand2); box-shadow:0 0 0 4px rgba(43,231,255,.12)"></span> New market: “Athlete Equity Tech”</span>
+              <span class="pill"><span class="dot" style="background:var(--brand); box-shadow:0 0 0 4px rgba(124,92,255,.12)"></span> Buyer: schools + districts</span>
+              <span class="pill"><span class="dot" style="background:var(--good); box-shadow:0 0 0 4px rgba(57,217,138,.12)"></span> Low cost: phone-first</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PROBLEM -->
+  <section id="problem">
+    <div class="container">
+      <div class="section-head fade-in">
+        <div>
+          <h2>The problem: talent is everywhere — access isn’t.</h2>
+          <p class="lead">
+            Underprivileged athletes lose opportunities because coaching, exposure, and injury prevention tools are expensive and unevenly distributed.
+            Schools and families can’t scale private training or scouting networks.
+          </p>
+        </div>
+        <div class="pill"><span class="dot" style="background:var(--warn); box-shadow:0 0 0 4px rgba(255,204,102,.12)"></span> Pain is high • Alternatives are costly</div>
+      </div>
+
+      <div class="grid">
+        <div class="span-4 panel fade-in">
+          <div class="icon">💸</div>
+          <b>Cost barrier</b>
+          <p class="muted" style="margin:8px 0 0; line-height:1.6">
+            Private coaching, camps, and showcase events are priced like luxuries, not necessities.
+          </p>
+          <ul class="bullets">
+            <li>Families pay out-of-pocket</li>
+            <li>Schools have limited staff</li>
+            <li>Exposure becomes pay-to-play</li>
+          </ul>
+        </div>
+
+        <div class="span-4 panel fade-in" style="transition-delay:.06s">
+          <div class="icon">👀</div>
+          <b>Exposure gap</b>
+          <p class="muted" style="margin:8px 0 0; line-height:1.6">
+            Athletes without networks struggle to prove skill to coaches and scouts.
+          </p>
+          <ul class="bullets">
+            <li>No standardized highlight pack</li>
+            <li>Stats are inconsistent/unverified</li>
+            <li>Hard to get noticed</li>
+          </ul>
+        </div>
+
+        <div class="span-4 panel fade-in" style="transition-delay:.12s">
+          <div class="icon">🩺</div>
+          <b>Preventable injuries</b>
+          <p class="muted" style="margin:8px 0 0; line-height:1.6">
+            Training load spikes, poor recovery, and lack of feedback can increase injury risk.
+          </p>
+          <ul class="bullets">
+            <li>Overuse + burnout</li>
+            <li>No simple load monitoring</li>
+            <li>Coaches can’t track everyone</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section id="solution">
+    <div class="container">
+      <div class="section-head fade-in">
+        <div>
+          <h2>SmartPlay: coaching + recruitment + safety in one platform</h2>
+          <p class="lead">
+            Instead of competing with expensive training companies, SmartPlay creates a new category:
+            <span class="gradient-text" style="font-weight:900">Athlete Equity Technology</span> — a phone-first system that schools can deploy at scale.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="span-7 panel fade-in">
+          <b style="font-size:16px;">How it works (simple + scalable)</b>
+          <div class="split" style="margin-top:12px;">
+            <div class="card">
+              <div class="row">
+                <b>1) Capture</b>
+                <span class="chip">phone camera</span>
+              </div>
+              <p class="muted" style="margin:8px 0 0; line-height:1.55">
+                Athletes record drills or game moments. SmartPlay tags clips automatically and organizes by skill.
+              </p>
+            </div>
+            <div class="card">
+              <div class="row">
+                <b>2) Analyze</b>
+                <span class="chip">AI metrics</span>
+              </div>
+              <p class="muted" style="margin:8px 0 0; line-height:1.55">
+                Generates easy metrics (consistency, speed proxies, workload signals) and coaching cues.
+              </p>
+            </div>
+            <div class="card">
+              <div class="row">
+                <b>3) Improve</b>
+                <span class="chip">micro-plans</span>
+              </div>
+              <p class="muted" style="margin:8px 0 0; line-height:1.55">
+                Personalized routines + feedback loops so athletes know what to do next—without private coaching.
+              </p>
+            </div>
+            <div class="card">
+              <div class="row">
+                <b>4) Share</b>
+                <span class="chip">privacy-first</span>
+              </div>
+              <p class="muted" style="margin:8px 0 0; line-height:1.55">
+                One-click “Recruitment Pack” with verified stats + highlight reels to coaches/scouts.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="span-5 panel fade-in" style="transition-delay:.06s">
+          <b style="font-size:16px;">What SmartPlay replaces</b>
+          <p class="muted" style="margin:8px 0 0; line-height:1.6">
+            SmartPlay isn’t “another fitness app.” It replaces expensive, fragmented tools with one system schools can justify.
+          </p>
+
+          <div style="display:grid; gap:10px; margin-top:12px;">
+            <div class="card">
+              <div class="row">
+                <b>Private coaching</b>
+                <span class="chip">$ → $$</span>
+              </div>
+              <div class="muted2" style="margin-top:6px;">Smart feedback + skill plans at near-zero marginal cost.</div>
+            </div>
+
+            <div class="card">
+              <div class="row">
+                <b>Showcase exposure</b>
+                <span class="chip">network</span>
+              </div>
+              <div class="muted2" style="margin-top:6px;">Standardized recruitment pack + verified highlights.</div>
+            </div>
+
+            <div class="card">
+              <div class="row">
+                <b>Manual tracking</b>
+                <span class="chip">coach time</span>
+              </div>
+              <div class="muted2" style="margin-top:6px;">Dashboards that save coach hours and spot risk early.</div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn primary" id="pilotBtn2">Request pilot</button>
+            <a class="btn" href="#pricing">See pricing</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section id="demo">
+    <div class="container">
+      <div class="section-head fade-in">
+        <div>
+          <h2>Interactive demo: see the “coach in your pocket” idea</h2>
+          <p class="lead">
+            Adjust intensity, recovery, and consistency. SmartPlay responds with training guidance and a simple injury-risk indicator.
+            (This is a website demo — your real pitch can say “prototype simulation.”)
+          </p>
+        </div>
+        <div class="pill"><span class="dot" style="background:var(--brand2); box-shadow:0 0 0 4px rgba(43,231,255,.12)"></span> Judge-friendly • Shows product logic</div>
+      </div>
+
+      <div class="demo">
+        <div class="panel fade-in">
+          <b style="font-size:16px;">Inputs</b>
+          <div class="control" style="margin-top:12px;">
+            <div>
+              <label for="intensity">Training intensity</label>
+              <input id="intensity" type="range" min="10" max="100" value="68"/>
+              <div class="statline"><span>value:</span> <span class="kbd" id="intensityVal">68</span></div>
+            </div>
+
+            <div>
+              <label for="recovery">Recovery quality (sleep / mobility / rest)</label>
+              <input id="recovery" type="range" min="10" max="100" value="52"/>
+              <div class="statline"><span>value:</span> <span class="kbd" id="recoveryVal">52</span></div>
+            </div>
+
+            <div>
+              <label for="consistency">Consistency (days/week)</label>
+              <input id="consistency" type="range" min="1" max="7" value="4"/>
+              <div class="statline"><span>value:</span> <span class="kbd" id="consistencyVal">4</span></div>
+            </div>
+          </div>
+
+          <p class="hint" style="margin-top:12px;">
+            SmartPlay’s pitch: “we make elite development replicable for everyone, not just those who can pay.”
+          </p>
+        </div>
+
+        <div class="panel fade-in" style="transition-delay:.06s">
+          <div class="row" style="align-items:flex-start; flex-wrap:wrap;">
+            <div>
+              <b style="font-size:16px;">Outputs</b>
+              <div class="small" style="margin-top:6px;">
+                Training score, safety indicator, and a micro-plan recommendation.
+              </div>
+            </div>
+            <span class="badge" id="riskBadge">Risk: Moderate</span>
+          </div>
+
+          <div style="margin-top:14px;">
+            <div class="row">
+              <div class="kpi">
+                <b>Training Score</b>
+                <small>growth signal</small>
+              </div>
+              <div class="chip" id="trainScoreChip">72</div>
+            </div>
+            <div class="meter" style="margin-top:10px;">
+              <i id="trainScoreMeter" style="width:72%"></i>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;">
+            <div class="row">
+              <div class="kpi">
+                <b>Injury-Risk Indicator</b>
+                <small>simple + explainable</small>
+              </div>
+              <div class="chip" id="riskChip">Moderate</div>
+            </div>
+            <div class="meter bad" style="margin-top:10px;">
+              <i id="riskMeter" style="width:48%"></i>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:14px;">
+            <div style="font-weight:900;">Micro-Plan</div>
+            <div class="muted" style="margin-top:6px; line-height:1.55" id="planText">
+              Add 1 recovery day + keep intensity steady. Focus on form + mobility to protect against spikes.
+            </div>
+            <div class="tagrow" id="planTags" style="margin-top:10px;">
+              <span class="tag">Mobility</span>
+              <span class="tag">Technique</span>
+              <span class="tag">Recovery</span>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn primary" id="demoCTA">Join waitlist</button>
+            <button class="btn" id="copyPitch">Copy 2-sentence pitch</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO BUYS / NONCUSTOMERS -->
+  <section id="buyers">
+    <div class="container">
+      <div class="section-head fade-in">
+        <div>
+          <h2>Who buys SmartPlay (and why it scales)</h2>
+          <p class="lead">
+            SmartPlay is designed for a Blue Ocean scoring rubric: a clear buyer, clear adoption path, and three tiers of “noncustomers”
+            you convert into customers.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="span-6 panel fade-in">
+          <div class="icon">🏫</div>
+          <b>Primary buyer: schools & districts</b>
+          <p class="muted" style="margin:8px 0 0; line-height:1.6">
+            Schools already fund athletic programs — SmartPlay makes those programs more equitable and measurable.
+          </p>
+          <ul class="bullets">
+            <li>Coach dashboard + athlete improvement reports</li>
+            <li>Recruitment visibility for the whole roster</li>
+            <li>Injury-risk alerts for safer training</li>
+            <li>Justifiable as “student success / equity” spend</li>
+          </ul>
+        </div>
+
+        <div class="span-6 panel fade-in" style="transition-delay:.06s">
+          <div class="icon">👟</div>
+          <b>Three tiers of noncustomers (converted)</b>
+          <div class="split" style="margin-top:12px;">
+            <div class="card">
+              <b>Tier 1</b>
+              <div class="muted2" style="margin-top:6px; line-height:1.5">
+                Athletes training alone with no coaching.
+              </div>
+            </div>
+            <div class="card">
+              <b>Tier 2</b>
+              <div class="muted2" style="margin-top:6px; line-height:1.5">
+                Schools lacking staff/time to track everyone.
+              </div>
+            </div>
+            <div class="card">
+              <b>Tier 3</b>
+              <div class="muted2" style="margin-top:6px; line-height:1.5">
+                Families who never considered paid coaching.
+              </div>
+            </div>
+            <div class="card">
+              <b>Result</b>
+              <div class="muted2" style="margin-top:6px; line-height:1.5">
+                A new market built around equity + access.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="span-12 panel fade-in" style="transition-delay:.12s">
+          <div class="row" style="flex-wrap:wrap">
+            <div>
+              <b style="font-size:16px;">“Eliminate–Reduce–Raise–Create” (Blue Ocean slide-ready)</b>
+              <div class="small" style="margin-top:6px;">
+                Use this exact grid in your pitch deck to score points.
+              </div>
+            </div>
+            <button class="btn" id="copyERRC">Copy ERRC grid</button>
+          </div>
+
+          <div class="grid" style="margin-top:14px;">
+            <div class="span-3 card">
+              <b>Eliminate</b>
+              <div class="muted2" style="margin-top:6px; line-height:1.55">
+                Pay-to-play exposure reliance, messy highlight sharing, manual stat tracking.
+              </div>
+            </div>
+            <div class="span-3 card">
+              <b>Reduce</b>
+              <div class="muted2" style="margin-top:6px; line-height:1.55">
+                Coach admin time, travel costs to showcases, guesswork training load.
+              </div>
+            </div>
+            <div class="span-3 card">
+              <b>Raise</b>
+              <div class="muted2" style="margin-top:6px; line-height:1.55">
+                Access, measurable progress, recruitment visibility, safety monitoring.
+              </div>
+            </div>
+            <div class="span-3 card">
+              <b>Create</b>
+              <div class="muted2" style="margin-top:6px; line-height:1.55">
+                Athlete Equity Tech: phone-first coaching + standardized recruitment packs.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-head fade-in">
+        <div>
+          <h2>Pricing that schools can actually adopt</h2>
+          <p class="lead">
+            Blue Ocean judges love “low cost + high differentiation.” This makes it feel real, purchasable, and scalable.
+          </p>
+        </div>
+      </div>
+
+      <div class="pricing">
+        <div class="price fade-in">
+          <div class="pill"><span class="dot" style="background:var(--brand2); box-shadow:0 0 0 4px rgba(43,231,255,.12)"></span> Individual</div>
+          <h3>Starter</h3>
+          <div class="amt">$0 <small>/ athlete</small></div>
+          <div class="muted">For anyone who needs access.</div>
+          <ul class="list">
+            <li><span class="tick">✓</span><span>Basic training plans + drill library</span></li>
+            <li><span class="tick">✓</span><span>Clip organizer + highlight templates</span></li>
+            <li><span class="tick">✓</span><span>Progress streaks + goals</span></li>
+          </ul>
+          <div style="margin-top:14px;">
+            <button class="btn primary" id="startFree">Start free</button>
+          </div>
+        </div>
+
+        <div class="price featured fade-in" style="transition-delay:.06s">
+          <div class="pill"><span class="dot" style="background:var(--brand); box-shadow:0 0 0 4px rgba(124,92,255,.12)"></span> Schools</div>
+          <h3>Team</h3>
+          <div class="amt">$499 <small>/ season</small></div>
+          <div class="muted">For one team (coach dashboard included).</div>
+          <ul class="list">
+            <li><span class="tick">✓</span><span>Coach dashboard + roster insights</span></li>
+            <li><span class="tick">✓</span><span>Recruitment packs with verified stats</span></li>
+            <li><span class="tick">✓</span><span>Safety indicator + training load alerts</span></li>
+            <li><span class="tick">✓</span><span>School-branded athlete profiles</span></li>
+          </ul>
+          <div style="margin-top:14px;">
+            <button class="btn primary" id="buyTeam">Request pilot</button>
+          </div>
+        </div>
+
+        <div class="price fade-in" style="transition-delay:.12s">
+          <div class="pill"><span class="dot" style="background:var(--good); box-shadow:0 0 0 4px rgba(57,217,138,.12)"></span> Districts</div>
+          <h3>District</h3>
+          <div class="amt">Custom <small>/ year</small></div>
+          <div class="muted">Scale across multiple schools + sports.</div>
+          <ul class="list">
+            <li><span class="tick">✓</span><span>Multi-school admin + analytics</span></li>
+            <li><span class="tick">✓</span><span>Equity reporting + participation metrics</span></li>
+            <li><span class="tick">✓</span><span>Bulk onboarding + training</span></li>
+            <li><span class="tick">✓</span><span>Priority support + integrations</span></li>
+          </ul>
+          <div style="margin-top:14px;">
+            <button class="btn" id="contactSales">Contact</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF -->
+  <section id="proof">
+    <div class="container">
+      <div class="section-head fade-in">
+        <div>
+          <h2>Make it feel real: results + testimonials (pitch-safe)</h2>
+          <p class="lead">
+            Judges reward credibility. These are “prototype-style” testimonials you can swap for real quotes later.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="span-4 panel fade-in">
+          <b>Coach</b>
+          <p class="muted" style="margin:8px 0 0; line-height:1.6">
+            “SmartPlay saves me hours. I can see who needs attention and who’s improving without guessing.”
+          </p>
+          <div class="muted2 small" style="margin-top:10px;">— High School Coach (Pilot)</div>
+        </div>
+        <div class="span-4 panel fade-in" style="transition-delay:.06s">
+          <b>Athlete</b>
+          <p class="muted" style="margin:8px 0 0; line-height:1.6">
+            “I don’t have money for private training, but I finally know what to work on and can show my progress.”
+          </p>
+          <div class="muted2 small" style="margin-top:10px;">— Student Athlete</div>
+        </div>
+        <div class="span-4 panel fade-in" style="transition-delay:.12s">
+          <b>AD / Administrator</b>
+          <p class="muted" style="margin:8px 0 0; line-height:1.6">
+            “This fits our equity goals. It’s affordable, measurable, and benefits every athlete—not just the stars.”
+          </p>
+          <div class="muted2 small" style="margin-top:10px;">— Athletic Director</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-head fade-in">
+        <div>
+          <h2>FAQ</h2>
+          <p class="lead">Short, judge-friendly answers. Clear privacy + feasibility helps your score.</p>
+        </div>
+      </div>
+
+      <div class="faq">
+        <details class="fade-in">
+          <summary>Is this realistic without expensive hardware?</summary>
+          <p>Yes. The pitch is phone-first: basic capture + smart organization + simple, explainable metrics. Schools already have phones; SmartPlay scales with software.</p>
+        </details>
+        <details class="fade-in" style="transition-delay:.05s">
+          <summary>How do you protect athlete privacy?</summary>
+          <p>Profiles are private by default. Sharing is permission-based (coach, recruiter, or public). Schools can control policies and approve external links.</p>
+        </details>
+        <details class="fade-in" style="transition-delay:.10s">
+          <summary>How does SmartPlay “create a new market”?</summary>
+          <p>Instead of competing directly with private coaching and showcases, SmartPlay creates Athlete Equity Tech: a school-deployable platform that makes elite development accessible at low marginal cost.</p>
+        </details>
+        <details class="fade-in" style="transition-delay:.15s">
+          <summary>What’s the business model?</summary>
+          <p>Freemium for individuals to drive adoption. Paid team/district licenses for schools (the buyer) to unlock dashboards, verified packs, and safety monitoring.</p>
+        </details>
+      </div>
+
+      <div class="panel fade-in" style="margin-top:14px;">
+        <div class="row" style="flex-wrap:wrap">
+          <div>
+            <b style="font-size:16px;">Ready to pitch?</b>
+            <div class="small" style="margin-top:6px;">
+              Use this site as your “product proof” + funnel during judging.
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn" id="downloadHint">Hosting tip</button>
+            <button class="btn primary" id="finalWaitlist">Join waitlist</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand" style="gap:10px;">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <div style="font-weight:900;">SmartPlay</div>
+            <div class="small">Equal access to elite athletic development.</div>
+          </div>
+        </div>
+        <p class="small" style="margin-top:12px; max-width:75ch;">
+          Built for Blue Ocean competition: clear unsolved problem, differentiated “new market,” low cost structure, and mass adoption path
+          through school licensing.
+        </p>
+        <p class="small">
+          Tip: host this file on GitHub Pages. Press <span class="kbd">⌘</span> + <span class="kbd">F</span> to find any section fast.
+        </p>
+      </div>
+
+      <div>
+        <div class="small"><b>Quick links</b></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+          <a class="btn" href="#problem">Problem</a>
+          <a class="btn" href="#solution">Solution</a>
+          <a class="btn" href="#demo">Demo</a>
+          <a class="btn" href="#pricing">Pricing</a>
+        </div>
+        <div class="small" style="margin-top:12px;">
+          © <span id="year"></span> SmartPlay • Demo website for pitching
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WAITLIST / PILOT MODAL -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Waitlist and pilot form">
+    <div class="modal">
+      <div class="modal-head">
+        <b id="modalTitle">Join the SmartPlay waitlist</b>
+        <button class="close" id="closeModal" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="pill" id="modalPill" style="margin-bottom:12px;">
+          <span class="dot" style="background:var(--brand2); box-shadow:0 0 0 4px rgba(43,231,255,.12)"></span>
+          This is a demo form (stores locally in your browser)
+        </div>
+
+        <form id="leadForm" class="form">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" placeholder="Your name" required />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@example.com" required />
+          </div>
+          <div class="field">
+            <label for="role">I’m a…</label>
+            <select id="role" required>
+              <option value="athlete">Student athlete</option>
+              <option value="parent">Parent/guardian</option>
+              <option value="coach">Coach</option>
+              <option value="admin">Administrator / Athletic Director</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="sport">Primary sport</label>
+            <input id="sport" placeholder="Soccer, Basketball, Track..." />
+          </div>
+          <div class="field" style="grid-column: span 2;">
+            <label for="goal">What do you want SmartPlay to help with?</label>
+            <textarea id="goal" placeholder="Example: recruiting exposure, training plan, injury prevention..."></textarea>
+          </div>
+
+          <div class="row" style="grid-column: span 2; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <div class="small">
+              By submitting, you agree to be contacted about SmartPlay updates (demo only).
+            </div>
+            <button class="btn primary" type="submit" id="submitLead">Submit</button>
+          </div>
+        </form>
+
+        <div class="card" style="margin-top:12px;">
+          <b style="font-size:14px;">Pitch-ready one-liner</b>
+          <div class="muted" style="margin-top:6px; line-height:1.6">
+            “SmartPlay turns any phone into a coaching + recruitment toolkit so under-resourced athletes can train, prove, and protect their talent at scale.”
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <b id="toastTitle">Saved!</b>
+    <small id="toastBody">Your info was stored locally for this demo.</small>
+  </div>
+
+  <script>
+    // --------- Utilities ----------
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    function showToast(title, body){
+      const t = $("#toast");
+      $("#toastTitle").textContent = title;
+      $("#toastBody").textContent = body || "";
+      t.style.display = "block";
+      clearTimeout(showToast._timer);
+      showToast._timer = setTimeout(() => (t.style.display = "none"), 2600);
+    }
+
+    function openModal(mode){
+      $("#overlay").style.display = "flex";
+      document.body.style.overflow = "hidden";
+      if(mode === "pilot"){
+        $("#modalTitle").textContent = "Request a School Pilot";
+        $("#modalPill").innerHTML = `
+          <span class="dot" style="background:var(--brand); box-shadow:0 0 0 4px rgba(124,92,255,.12)"></span>
+          Pilot requests help validate product-market fit (demo only)
+        `;
+        $("#role").value = "admin";
+        $("#goal").placeholder = "Example: which teams, number of athletes, and what outcomes you want (recruitment, safety, development).";
+      } else {
+        $("#modalTitle").textContent = "Join the SmartPlay Waitlist";
+        $("#modalPill").innerHTML = `
+          <span class="dot" style="background:var(--brand2); box-shadow:0 0 0 4px rgba(43,231,255,.12)"></span>
+          This is a demo form (stores locally in your browser)
+        `;
+      }
+      $("#name").focus();
+    }
+
+    function closeModal(){
+      $("#overlay").style.display = "none";
+      document.body.style.overflow = "";
+    }
+
+    // --------- Hero mock animation ----------
+    function setHeroMock(){
+      const score = 60 + Math.round(Math.random() * 18);
+      $("#chipScore").textContent = `+${Math.round((score-60)/1.5)}%`;
+      $("#barScore").style.width = score + "%";
+
+      const risk = 18 + Math.round(Math.random() * 28);
+      $("#barRisk").style.width = risk + "%";
+      $("#chipRisk").textContent = risk < 35 ? "Low" : "Moderate";
+    }
+
+    // --------- Demo logic ----------
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+    function computeDemo(intensity, recovery, consistency){
+      // Training score: grows with intensity + consistency, but drops if recovery is low.
+      const base = (intensity * 0.55) + (consistency * 8);
+      const recoveryPenalty = (100 - recovery) * 0.35;
+      const score = clamp(Math.round(base - recoveryPenalty), 0, 100);
+
+      // Risk: high intensity + low recovery + high frequency -> higher risk.
+      const riskRaw = (intensity * 0.55) + ((7 - consistency) * -6) + ((100 - recovery) * 0.65);
+      const risk = clamp(Math.round(riskRaw), 0, 100);
+
+      let riskLabel = "Low";
+      let badge = "Risk: Low";
+      if(risk >= 35) { riskLabel = "Moderate"; badge = "Risk: Moderate"; }
+      if(risk >= 65) { riskLabel = "High"; badge = "Risk: High"; }
+
+      // Plan recommendations
+      let plan = "";
+      let tags = [];
+      if(riskLabel === "Low"){
+        plan = "Keep your routine steady. Add one skill-focus session and track progress clips weekly for your recruitment pack.";
+        tags = ["Skill", "Consistency", "Highlights"];
+      } else if(riskLabel === "Moderate"){
+        plan = "Add 1 recovery day and keep intensity steady. Prioritize technique + mobility to avoid sudden load spikes.";
+        tags = ["Mobility", "Technique", "Recovery"];
+      } else {
+        plan = "Reduce intensity for 48–72 hours. Focus on low-impact skill reps + recovery, then ramp back gradually next week.";
+        tags = ["Deload", "Recovery", "Ramp-up"];
+      }
+
+      return { score, risk, riskLabel, badge, plan, tags };
+    }
+
+    function renderDemo(){
+      const intensity = +$("#intensity").value;
+      const recovery = +$("#recovery").value;
+      const consistency = +$("#consistency").value;
+
+      $("#intensityVal").textContent = intensity;
+      $("#recoveryVal").textContent = recovery;
+      $("#consistencyVal").textContent = consistency;
+
+      const out = computeDemo(intensity, recovery, consistency);
+
+      $("#trainScoreChip").textContent = out.score;
+      $("#trainScoreMeter").style.width = out.score + "%";
+
+      $("#riskChip").textContent = out.riskLabel;
+      $("#riskBadge").textContent = out.badge;
+      $("#riskMeter").style.width = out.risk + "%";
+
+      // Change risk meter class color
+      const meter = $("#riskMeter").parentElement;
+      meter.classList.toggle("bad", out.riskLabel !== "Low");
+
+      $("#planText").textContent = out.plan;
+      $("#planTags").innerHTML = out.tags.map(t => `<span class="tag">${t}</span>`).join("");
+
+      // Keep hero mock in sync-ish
+      $("#chipRisk").textContent = out.riskLabel === "High" ? "High" : (out.riskLabel === "Moderate" ? "Moderate" : "Low");
+      $("#barRisk").style.width = clamp(out.risk, 16, 72) + "%";
+      $("#barScore").style.width = clamp(out.score, 18, 92) + "%";
+      $("#chipScore").textContent = (out.score >= 70 ? "+12%" : "+6%");
+    }
+
+    // --------- Copy helpers ----------
+    function copyToClipboard(text){
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Copied", "Paste it into your pitch deck or script.");
+      }).catch(() => {
+        showToast("Copy failed", "Your browser blocked clipboard access.");
+      });
+    }
+
+    // --------- Smooth scroll ----------
+    function smoothScrollTo(hash){
+      const el = document.querySelector(hash);
+      if(!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // --------- Mobile menu (simple) ----------
+    function toggleMenu(){
+      const links = document.querySelector(".nav-links");
+      const visible = getComputedStyle(links).display !== "none";
+      links.style.display = visible ? "none" : "flex";
+      links.style.flexWrap = "wrap";
+      links.style.justifyContent = "flex-end";
+    }
+
+    // --------- Intersection animations ----------
+    function initReveal(){
+      const obs = new IntersectionObserver((entries) => {
+        for(const e of entries){
+          if(e.isIntersecting){
+            e.target.classList.add("show");
+            obs.unobserve(e.target);
+          }
+        }
+      }, { threshold: 0.12 });
+      $$(".fade-in").forEach(el => obs.observe(el));
+    }
+
+    // --------- Form handling (local demo storage) ----------
+    function saveLead(payload){
+      const leads = JSON.parse(localStorage.getItem("smartplay_leads") || "[]");
+      leads.push({ ...payload, ts: new Date().toISOString() });
+      localStorage.setItem("smartplay_leads", JSON.stringify(leads));
+    }
+
+    // --------- Events ----------
+    $("#year").textContent = new Date().getFullYear();
+
+    $("#waitlistBtn").addEventListener("click", () => openModal("waitlist"));
+    $("#heroWaitlist").addEventListener("click", () => openModal("waitlist"));
+    $("#finalWaitlist").addEventListener("click", () => openModal("waitlist"));
+    $("#demoCTA").addEventListener("click", () => openModal("waitlist"));
+    $("#startFree").addEventListener("click", () => openModal("waitlist"));
+
+    $("#pilotBtn").addEventListener("click", () => openModal("pilot"));
+    $("#pilotBtn2").addEventListener("click", () => openModal("pilot"));
+    $("#buyTeam").addEventListener("click", () => openModal("pilot"));
+    $("#contactSales").addEventListener("click", () => openModal("pilot"));
+
+    $("#closeModal").addEventListener("click", closeModal);
+    $("#overlay").addEventListener("click", (e) => { if(e.target.id === "overlay") closeModal(); });
+    window.addEventListener("keydown", (e) => { if(e.key === "Escape") closeModal(); });
+
+    $("#heroDemo").addEventListener("click", () => smoothScrollTo("#demo"));
+
+    $("#menuBtn").addEventListener("click", toggleMenu);
+
+    $("#intensity").addEventListener("input", renderDemo);
+    $("#recovery").addEventListener("input", renderDemo);
+    $("#consistency").addEventListener("input", renderDemo);
+
+    $("#copyPitch").addEventListener("click", () => {
+      const pitch = "SmartPlay turns any phone into a coaching + recruitment toolkit so under-resourced athletes can train, prove, and protect their talent at scale. Schools license it to unlock coach dashboards, verified recruitment packs, and safety monitoring.";
+      copyToClipboard(pitch);
+    });
+
+    $("#copyERRC").addEventListener("click", () => {
+      const errc =
+`SmartPlay ERRC (Eliminate–Reduce–Raise–Create)
+Eliminate: pay-to-play exposure reliance, messy highlight sharing, manual stat tracking
+Reduce: coach admin time, travel costs to showcases, guesswork training load
+Raise: access, measurable progress, recruitment visibility, safety monitoring
+Create: Athlete Equity Tech — phone-first coaching + standardized recruitment packs`;
+      copyToClipboard(errc);
+    });
+
+    $("#downloadHint").addEventListener("click", () => {
+      showToast("Hosting tip", "Upload this index.html to a GitHub repo → Settings → Pages → deploy. Or drag into Vercel as a static site.");
+    });
+
+    $("#leadForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const payload = {
+        name: $("#name").value.trim(),
+        email: $("#email").value.trim(),
+        role: $("#role").value,
+        sport: $("#sport").value.trim(),
+        goal: $("#goal").value.trim()
+      };
+      saveLead(payload);
+      closeModal();
+      showToast("Submitted!", "Saved locally for this demo. Replace this with a real backend later.");
+      // Reset
+      $("#leadForm").reset();
+    });
+
+    // Initialize
+    initReveal();
+    setHeroMock();
+    renderDemo();
+    setInterval(setHeroMock, 6500);
+  </script>
+</body>
+</html>
